@@ -50,6 +50,6 @@ ffmpeg -v error -y -i "$AUD" "${AENC[@]}" -b:a 320k -ar 48000 "$OUT/audio.m4a"
 rm -f "$OUT/kazi_dv84.mp4" "$OUT/kazi_hlg.mp4"
 MP4Box -quiet -add "$OUT/dv.hevc:dvp=8.hlg2100:fps=60" -add "$OUT/audio.m4a" -new "$OUT/kazi_dv84.mp4"
 MP4Box -quiet -add "$OUT/hlg.hevc:fps=60" -add "$OUT/audio.m4a" -new "$OUT/kazi_hlg.mp4"
-dovi_tool info -i "$OUT/dv.hevc" -f 0 --summary 2>/dev/null | head -20 || true
+dovi_tool info -i "$OUT/rpu.bin" --summary 2>/dev/null | head -12 || true   # 镜头数、MaxCLL/MaxFALL
 echo "$(date +%H:%M:%S) 完成：$OUT/kazi_dv84.mp4（杜比视界 8.4），$OUT/kazi_hlg.mp4（HLG）"
 echo HDR_DONE
