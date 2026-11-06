@@ -1,0 +1,9 @@
+# 卡字工具的 Python 依赖。pip install -r tools/requirements.txt
+numpy>=2.0
+scipy>=1.11
+soundfile>=0.12
+librosa>=0.10
+pyloudnorm>=0.1.1
+# 配音和对齐（苹果芯片 Mac）
+mlx-audio>=0.6.4; sys_platform == "darwin" and platform_machine == "arm64"
+mlx-whisper>=0.4.3; sys_platform == "darwin" and platform_machine == "arm64"

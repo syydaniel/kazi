@@ -1,0 +1,402 @@
+{
+ "opus_base": {
+  "video": "videos/opus_base.mp4",
+  "fps": 60.0,
+  "frames": 2357,
+  "duration": 39.29,
+  "size": "1920x1080",
+  "audio_streams": 1,
+  "keywords": 9,
+  "hits": 1,
+  "kazi_rate": 0.111,
+  "chance": 0.364,
+  "lift": -0.253,
+  "window": [
+   -0.35,
+   0.15
+  ],
+  "detail": [
+   {
+    "word": "八颗行星",
+    "t": 2.56,
+    "line": 1,
+    "hit": false,
+    "near": 0.16,
+    "before": 2.68
+   },
+   {
+    "word": "水星",
+    "t": 7.69,
+    "line": 2,
+    "hit": false,
+    "near": 0.56,
+    "before": 3.26
+   },
+   {
+    "word": "金星",
+    "t": 11.44,
+    "line": 3,
+    "hit": false,
+    "near": 2.41,
+    "before": 4.81
+   },
+   {
+    "word": "地球",
+    "t": 17.23,
+    "line": 4,
+    "hit": false,
+    "near": 0.74,
+    "before": 5.03
+   },
+   {
+    "word": "火星",
+    "t": 19.87,
+    "line": 5,
+    "hit": false,
+    "near": 0.39,
+    "before": 1.98
+   },
+   {
+    "word": "木星",
+    "t": 22.86,
+    "line": 6,
+    "hit": false,
+    "near": 0.54,
+    "before": 5.32
+   },
+   {
+    "word": "土星",
+    "t": 27.4,
+    "line": 7,
+    "hit": false,
+    "near": 0.65,
+    "before": 9.1
+   },
+   {
+    "word": "天王星",
+    "t": 32.43,
+    "line": 8,
+    "hit": true,
+    "near": 0.71,
+    "before": 0.07
+   },
+   {
+    "word": "海王星",
+    "t": 34.85,
+    "line": 9,
+    "hit": false,
+    "near": 0.9,
+    "before": 3.95
+   }
+  ],
+  "black_frames": 0,
+  "flash_frames": [],
+  "hard_cuts": 0,
+  "longest_static": 1.13,
+  "lufs": -23.8,
+  "true_peak": -2.6,
+  "problems": [
+   "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+  ]
+ },
+ "opus_kazi": {
+  "video": "videos/opus_kazi.mp4",
+  "fps": 60.0,
+  "frames": 2358,
+  "duration": 39.3,
+  "size": "1920x1080",
+  "audio_streams": 1,
+  "keywords": 9,
+  "hits": 9,
+  "kazi_rate": 1.0,
+  "chance": 0.332,
+  "lift": 0.668,
+  "window": [
+   -0.35,
+   0.15
+  ],
+  "detail": [
+   {
+    "word": "八颗行星",
+    "t": 2.56,
+    "line": 1,
+    "hit": true,
+    "near": 0.68,
+    "before": 0.05
+   },
+   {
+    "word": "水星",
+    "t": 7.69,
+    "line": 2,
+    "hit": true,
+    "near": 3.8,
+    "before": 0.03
+   },
+   {
+    "word": "金星",
+    "t": 11.44,
+    "line": 3,
+    "hit": true,
+    "near": 3.4,
+    "before": 0.71
+   },
+   {
+    "word": "地球",
+    "t": 17.23,
+    "line": 4,
+    "hit": true,
+    "near": 3.13,
+    "before": 1.99
+   },
+   {
+    "word": "火星",
+    "t": 19.87,
+    "line": 5,
+    "hit": true,
+    "near": 2.38,
+    "before": 1.12
+   },
+   {
+    "word": "木星",
+    "t": 22.86,
+    "line": 6,
+    "hit": true,
+    "near": 3.77,
+    "before": 1.01
+   },
+   {
+    "word": "土星",
+    "t": 27.4,
+    "line": 7,
+    "hit": true,
+    "near": 2.79,
+    "before": 0.21
+   },
+   {
+    "word": "天王星",
+    "t": 32.43,
+    "line": 8,
+    "hit": true,
+    "near": 1.56,
+    "before": 0.13
+   },
+   {
+    "word": "海王星",
+    "t": 34.85,
+    "line": 9,
+    "hit": true,
+    "near": 5.47,
+    "before": 0.78
+   }
+  ],
+  "black_frames": 0,
+  "flash_frames": [],
+  "hard_cuts": 0,
+  "longest_static": 1.83,
+  "lufs": -23.8,
+  "true_peak": -2.6,
+  "problems": [
+   "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+  ]
+ },
+ "sonnet_base": {
+  "video": "videos/sonnet_base.mp4",
+  "fps": 60.0,
+  "frames": 2357,
+  "duration": 39.29,
+  "size": "1920x1080",
+  "audio_streams": 1,
+  "keywords": 9,
+  "hits": 0,
+  "kazi_rate": 0.0,
+  "chance": 0.261,
+  "lift": -0.261,
+  "window": [
+   -0.35,
+   0.15
+  ],
+  "detail": [
+   {
+    "word": "八颗行星",
+    "t": 2.56,
+    "line": 1,
+    "hit": false,
+    "near": 0.0,
+    "before": 0.04
+   },
+   {
+    "word": "水星",
+    "t": 7.69,
+    "line": 2,
+    "hit": false,
+    "near": 0.0,
+    "before": 0.99
+   },
+   {
+    "word": "金星",
+    "t": 11.44,
+    "line": 3,
+    "hit": false,
+    "near": 1.26,
+    "before": 1.26
+   },
+   {
+    "word": "地球",
+    "t": 17.23,
+    "line": 4,
+    "hit": false,
+    "near": 0.01,
+    "before": 0.74
+   },
+   {
+    "word": "火星",
+    "t": 19.87,
+    "line": 5,
+    "hit": false,
+    "near": 0.0,
+    "before": 1.65
+   },
+   {
+    "word": "木星",
+    "t": 22.86,
+    "line": 6,
+    "hit": false,
+    "near": 0.66,
+    "before": 6.86
+   },
+   {
+    "word": "土星",
+    "t": 27.4,
+    "line": 7,
+    "hit": false,
+    "near": 0.0,
+    "before": 2.52
+   },
+   {
+    "word": "天王星",
+    "t": 32.43,
+    "line": 8,
+    "hit": false,
+    "near": 0.01,
+    "before": 1.28
+   },
+   {
+    "word": "海王星",
+    "t": 34.85,
+    "line": 9,
+    "hit": false,
+    "near": 0.0,
+    "before": 1.12
+   }
+  ],
+  "black_frames": 0,
+  "flash_frames": [],
+  "hard_cuts": 0,
+  "longest_static": 4.02,
+  "lufs": -23.8,
+  "true_peak": -2.6,
+  "problems": [
+   "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+  ]
+ },
+ "sonnet_kazi": {
+  "video": "videos/sonnet_kazi.mp4",
+  "fps": 60.0,
+  "frames": 2357,
+  "duration": 39.29,
+  "size": "1920x1080",
+  "audio_streams": 1,
+  "keywords": 9,
+  "hits": 9,
+  "kazi_rate": 1.0,
+  "chance": 0.312,
+  "lift": 0.688,
+  "window": [
+   -0.35,
+   0.15
+  ],
+  "detail": [
+   {
+    "word": "八颗行星",
+    "t": 2.56,
+    "line": 1,
+    "hit": true,
+    "near": 3.35,
+    "before": 0.05
+   },
+   {
+    "word": "水星",
+    "t": 7.69,
+    "line": 2,
+    "hit": true,
+    "near": 3.84,
+    "before": 0.87
+   },
+   {
+    "word": "金星",
+    "t": 11.44,
+    "line": 3,
+    "hit": true,
+    "near": 5.0,
+    "before": 0.38
+   },
+   {
+    "word": "地球",
+    "t": 17.23,
+    "line": 4,
+    "hit": true,
+    "near": 4.23,
+    "before": 0.27
+   },
+   {
+    "word": "火星",
+    "t": 19.87,
+    "line": 5,
+    "hit": true,
+    "near": 3.6,
+    "before": 0.29
+   },
+   {
+    "word": "木星",
+    "t": 22.86,
+    "line": 6,
+    "hit": true,
+    "near": 9.18,
+    "before": 0.43
+   },
+   {
+    "word": "土星",
+    "t": 27.4,
+    "line": 7,
+    "hit": true,
+    "near": 4.22,
+    "before": 0.85
+   },
+   {
+    "word": "天王星",
+    "t": 32.43,
+    "line": 8,
+    "hit": true,
+    "near": 6.81,
+    "before": 0.38
+   },
+   {
+    "word": "海王星",
+    "t": 34.85,
+    "line": 9,
+    "hit": true,
+    "near": 4.09,
+    "before": 0.46
+   }
+  ],
+  "black_frames": 0,
+  "flash_frames": [],
+  "hard_cuts": 9,
+  "longest_static": 2.05,
+  "lufs": -23.8,
+  "true_peak": -2.6,
+  "problems": [
+   "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+  ]
+ }
+}
