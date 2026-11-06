@@ -25,6 +25,16 @@ if mac_arm:
 for mod, pip in pkgs.items():
     check(f"Python 包 {pip}", importlib.util.find_spec(mod) is not None, f"pip install {pip}")
 
+opt = []
+for b, what, fix in [("dovi_tool", "出杜比视界", "brew install dovi_tool，或在 github.com/quietvoid/dovi_tool 下载"),
+                     ("MP4Box", "封装杜比视界 MP4", "brew install gpac")]:
+    if shutil.which(b) is None:
+        opt.append((b, what, fix))
+if shutil.which("ffmpeg"):
+    enc = subprocess.run(["ffmpeg", "-hide_banner", "-encoders"], capture_output=True, text=True).stdout
+    if "libx265" not in enc:
+        opt.append(("ffmpeg 的 libx265", "HDR 编码", "换一个带 x265 的 ffmpeg（brew install ffmpeg 自带），或者用 ENC=vt"))
+
 print(f"系统：{platform.system()} {platform.machine()}，Python {platform.python_version()}")
 if not mac_arm:
     print("注意：配音（voice.py）和对齐（timeline.py）目前只在苹果芯片的 Mac 上实测过，用的是 MLX。别的平台还没实测，可以这样绕过：")
@@ -33,9 +43,6 @@ if not mac_arm:
     print("  3. 画面、检查、混音（Remotion、kazi_check.py、mix.py）不依赖 MLX，各平台都能用。")
 for n, _ in ok: print("  有  ", n)
 for n, f in miss: print("  缺  ", n, "→", f)
-if not mac_arm:
-    print("\n提醒：配音（voice.py）和对齐（timeline.py）用的是 mlx，只在苹果芯片的 Mac 上实测过。")
-    print("  其他平台：自己录旁白；对齐可以用千问官方的 qwen-asr 包在 NVIDIA 显卡上跑 Qwen3-ForcedAligner（未实测），")
-    print("  只要输出同样格式的 timeline.json，后面几步都能照常用。")
+for n, what, f in opt: print("  可选", n, f"（{what}才要）→", f)
 print("\n第一次配音和对齐会自动下载模型：Qwen3-TTS 1.7B、Qwen3-ForcedAligner 0.6B、Whisper large-v3-turbo，合计几个 GB。")
 print("没有问题" if not miss else f"\n缺 {len(miss)} 项，装好再开工。")

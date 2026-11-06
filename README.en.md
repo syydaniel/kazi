@@ -60,6 +60,7 @@ Models are downloaded once, then everything runs locally:
 | Music | ACE-Step 1.5 |
 | Picture | Remotion 4 (`starter/`), or anything else |
 | Check and mix | ffmpeg, `tools/kazi_check.py`, `tools/mix.py` |
+| 4K and HDR | Remotion at 2× scale; x265, dovi_tool and MP4Box for Dolby Vision 8.4 |
 
 Remotion is free for individuals and small teams; companies should check its license. Each model is used under its own license.
 

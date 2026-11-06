@@ -73,6 +73,7 @@ GitHub 打不开的话，网盘里有打包好的版本（链接见视频置顶�
 | 配乐 | ACE-Step 1.5 |
 | 画面 | Remotion 4（`starter/` 是模板）；也可以换成别的，见画风图鉴 |
 | 检查和混音 | ffmpeg + `tools/kazi_check.py`、`tools/mix.py` |
+| 4K 和 HDR | Remotion 放大渲染；x265、dovi_tool、MP4Box 出杜比视界 8.4 |
 
 Remotion 对个人和小团队免费，公司使用要看它的许可条款。各个模型按各自的许可证使用。
 

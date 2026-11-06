@@ -85,6 +85,7 @@ description: 卡字：做"画面卡在旁白关键词上"的讲解视频、科�
 **检查**
 - `python tools/kazi_check.py out/final.mp4 --timeline timeline.json`：卡字率、随机基线、黑帧、一闪而过的帧、长时间不动、响度、音轨、片长。
 - 不通过就回去改，改完再量。**全部通过才叫用户**，并把报告里的数字原样告诉用户，没量过的不要说"已完成"。
+- 用户要 4K 或 HDR 时，检查通过以后再出：`tools/master.sh` 渲 4K 母版，`tools/hdr/hdr_encode.sh` 出杜比视界 8.4 和 HLG。换了配色要把新的底色、发光色告诉 `hdr_mask.py`，见 docs/06_检查和发布.md。
 
 ## 工具一览
 
@@ -100,6 +101,9 @@ description: 卡字：做"画面卡在旁白关键词上"的讲解视频、科�
 | `tools/kazi_check.py` | 量卡字率和各种硬伤 |
 | `tools/caption_check.py` | 量字幕出现、消失、逐字变亮和配音对不对得上 |
 | `tools/mix.py` | 旁白、配乐、音效混音，按逐字时间让位，统一响度 |
+| `tools/thin_cues.py` | 音效打点太多时按优先级筛一遍 |
+| `tools/master.sh` | 分段渲染 4K 母版，中断可续 |
+| `tools/hdr/` | SDR 母版转 HDR：杜比视界 8.4（HLG 基础层）和 HLG |
 | `starter/` | Remotion 模板：`time.ts` 查时间，`anim.ts` 曲线和弹簧，字幕组件 |
 
 ## 交付时告诉用户
