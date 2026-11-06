@@ -1,6 +1,7 @@
 """逐句生成旁白：千问 Qwen3-TTS Base 克隆 ref.wav 的声音，每句生成 N 遍，用 Whisper 回听打分，留最好的一遍。
 
-用法：python voice.py <稿子.txt> <输出目录> [--takes 4] [--only 1,2,5]
+用法：python voice.py <稿子.txt> <输出目录> [--takes 4] [--only 1,2,5] [--lang en]
+- --lang en：念英文稿（同一个克隆声，参考录音是中文也可以）。语音识别、语速打分都按英文来。
 - 稿子格式：一句一行；[段落名] 开新段；{念法=>字幕}；行尾 "| 0.4" 是句后停顿秒数。
 - 可以断点续跑：念法没变的句子直接跳过。所有遍都留在 takes/，方便换耳朵挑。
 """
@@ -17,8 +18,11 @@ ap.add_argument("--takes", type=int, default=4)
 ap.add_argument("--only", default="")
 ap.add_argument("--model", default="mlx-community/Qwen3-TTS-12Hz-1.7B-Base-bf16")
 ap.add_argument("--asr", default="mlx-community/whisper-large-v3-turbo")
-ap.add_argument("--hint", default="以下是普通话的句子。")
+ap.add_argument("--hint", default="")
+ap.add_argument("--lang", default="zh", choices=["zh", "en"])
 a = ap.parse_args()
+EN = a.lang == "en"
+if not a.hint: a.hint = "The following is an English sentence." if EN else "以下是普通话的句子。"
 
 OUT = Path(a.out); LINES = OUT/"lines"; TAKES = OUT/"takes"; WORK = OUT/".work"
 for d in (LINES, TAKES, WORK): d.mkdir(parents=True, exist_ok=True)
@@ -43,11 +47,26 @@ def parse(path):
     return [x for x in items if x is not None]
 
 
-norm = lambda s: re.sub(r"[^\w]", "", s.lower())
+ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+
+def spell(n):
+    """英文稿用：识别结果里的阿拉伯数字念成英文单词，再和稿子比（稿子里写的是单词）。"""
+    if n < 20: return ONES[n]
+    if n < 100: return TENS[n // 10] + ("" if n % 10 == 0 else ONES[n % 10])
+    if n < 1000: return ONES[n // 100] + "hundred" + ("and" + spell(n % 100) if n % 100 else "")
+    return str(n)
+
+
+def norm(s):
+    s = s.lower()
+    if EN: s = re.sub(r"\d+", lambda m: spell(int(m.group())), s.replace(",", ""))
+    return re.sub(r"[^\w]", "", s)
 
 
 def asr(p):
-    return mlx_whisper.transcribe(str(p), path_or_hf_repo=a.asr, language="zh", initial_prompt=a.hint,
+    return mlx_whisper.transcribe(str(p), path_or_hf_repo=a.asr, language=a.lang, initial_prompt=a.hint,
                                   condition_on_previous_text=False)["text"].strip()
 
 
@@ -82,21 +101,26 @@ for it in items:
         shutil.copy(c.with_suffix(".wav"), dest)
         meta.write_text(json.dumps({**json.loads(c.with_suffix(".json").read_text("utf-8")), **it}, ensure_ascii=False), "utf-8"); continue
     if model is None: model = load_model(a.model)
-    best, budget = None, int(len(it["say"])/4.0*12*1.8)+40
+    # 生成长度上限：按预计秒数 × 12 帧/秒 × 1.8 倍余量（中文约 4 字/秒，英文约 2.6 词/秒）
+    secs = len(it["say"].split())/2.6 if EN else len(it["say"])/4.0
+    best, budget = None, int(secs*12*1.8)+40
     for t in range(a.takes):
         pre = str(WORK/f"L{it['i']:03d}_t{t}")
         for old in WORK.glob(f"L{it['i']:03d}_t{t}*.wav"): old.unlink()
-        generate_audio(text=it["say"], model=model, ref_audio=str(REF), ref_text=REF_TEXT, lang_code="zh",
+        generate_audio(text=it["say"], model=model, ref_audio=str(REF), ref_text=REF_TEXT, lang_code=a.lang,
                        file_prefix=pre, verbose=False, max_tokens=budget)
         p = next(WORK.glob(f"L{it['i']:03d}_t{t}*.wav"))
         y, sr = sf.read(p, dtype="float32", always_2d=True); y = trim(y[:, 0], sr)
         sf.write(TAKES/f"L{it['i']:03d}_t{t}.wav", y, sr, subtype="PCM_16")
         heard = asr(p)
         ratio = difflib.SequenceMatcher(None, norm(it["say"]), norm(heard), autojunk=False).ratio()
-        s = pitch_spread(y, sr); dur = len(y)/sr; cps = len(norm(it["say"]))/max(dur, .1)
+        s = pitch_spread(y, sr); dur = len(y)/sr
+        # 语速：中文按字/秒，英文按词/秒
+        cps = (len(it["say"].split()) if EN else len(norm(it["say"])))/max(dur, .1)
+        lo, hi = (2.0, 3.9) if EN else (2.5, 8.5)
         # 念对字是第一位的：吻合度差 0.05 就压过起伏的差别（做片时遇到过，0.94 的那遍起伏大，被挑中了，结果"不装"念得像"不中"）
         # 语速异常的扣分；吻合度差不多时，才看起伏
-        score = s + (-6 if ratio < .9 else 0) + (-4 if cps < 2.5 or cps > 8.5 else 0) + 25*ratio
+        score = s + (-6 if ratio < .9 else 0) + (-4 if cps < lo or cps > hi else 0) + 25*ratio
         cand = {"score": score, "y": y, "sr": sr, "take": t, "ratio": round(ratio, 3), "st_std": s,
                 "heard": heard, "dur": round(dur, 3), "cps": round(cps, 2)}
         if best is None or score > best["score"]: best = cand
