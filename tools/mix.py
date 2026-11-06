@@ -22,6 +22,7 @@
   - 放片段的那段时间也算"在说话"，音乐和音效一样让位。
 母带
   - 积分响度 -14 LUFS，真峰值不超过 -1 dBTP（4 倍过采样估算），48 kHz / 24 bit 立体声。
+    wav 本身压到 -1.8：封成 AAC 以后真峰值会抬高约 0.5 dB（实测 -1.2 变 -0.7），留出这个余量。
 """
 import argparse, hashlib, json, subprocess
 from pathlib import Path
@@ -199,11 +200,12 @@ def limit(x, ceiling_db):
     return x * out[:, None]
 
 
-master = limit(mix * gain, a.tp - 0.2)
+HEAD = 0.8  # 给 AAC 编码留的真峰值余量（dB）
+master = limit(mix * gain, a.tp - HEAD)
 for _ in range(2):  # 限制会让响度掉一点，补回来再限一次
     d = a.lufs - meter.integrated_loudness(master)
     if abs(d) < 0.2: break
-    gain *= 10 ** (d / 20); master = limit(mix * gain, a.tp - 0.2)
+    gain *= 10 ** (d / 20); master = limit(mix * gain, a.tp - HEAD)
 out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
 sf.write(out, master, SR, subtype="PCM_24")
 if a.stems:
@@ -212,6 +214,9 @@ if a.stems:
         sf.write(st / f"{name}.wav", y * gain, SR, subtype="PCM_24")
 print(f"混音 {N / SR:.1f} 秒，响度 {meter.integrated_loudness(master):.1f} LUFS，样本峰值 {20 * np.log10(np.abs(master).max() + 1e-9):.1f} dBFS → {out}")
 if a.video and a.final:
+    # 有苹果的 AAC 编码器（aac_at）就用它：ffmpeg 自带的 aac 在 320k 下会冒出 1 dB 多的真峰值尖刺
+    encs = subprocess.run(["ffmpeg", "-hide_banner", "-encoders"], capture_output=True, text=True).stdout
+    aenc = ["-c:a", "aac_at", "-aac_at_mode", "cbr"] if " aac_at " in encs else ["-c:a", "aac"]
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", a.video, "-i", str(out), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy",
-                    "-c:a", "aac", "-b:a", "320k", "-shortest", a.final], check=True)
+                    *aenc, "-b:a", "320k", "-shortest", a.final], check=True)
     print("已封进视频 →", a.final)

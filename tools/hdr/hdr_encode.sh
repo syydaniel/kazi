@@ -44,7 +44,9 @@ ffmpeg -v error -stats -y -i "$BASE" -i "$OUT/mask.mkv" -filter_complex "$FC" -m
   -f hevc "$OUT/hlg.hevc"   # 码流里的颜色标记直接写死：硬件编码器会忽略上面那几个参数
 dovi_tool generate -j "$OUT/dv_generator.json" -o "$OUT/rpu.bin"
 dovi_tool inject-rpu -i "$OUT/hlg.hevc" --rpu-in "$OUT/rpu.bin" -o "$OUT/dv.hevc"
-ffmpeg -v error -y -i "$AUD" -c:a aac -b:a 320k -ar 48000 "$OUT/audio.m4a"
+# 有苹果的 AAC 编码器（aac_at）就用它：ffmpeg 自带的 aac 在 320k 下会冒出 1 dB 多的真峰值尖刺
+if ffmpeg -hide_banner -encoders 2>/dev/null | grep -q ' aac_at '; then AENC=(-c:a aac_at -aac_at_mode cbr); else AENC=(-c:a aac); fi
+ffmpeg -v error -y -i "$AUD" "${AENC[@]}" -b:a 320k -ar 48000 "$OUT/audio.m4a"
 rm -f "$OUT/kazi_dv84.mp4" "$OUT/kazi_hlg.mp4"
 MP4Box -quiet -add "$OUT/dv.hevc:dvp=8.hlg2100:fps=60" -add "$OUT/audio.m4a" -new "$OUT/kazi_dv84.mp4"
 MP4Box -quiet -add "$OUT/hlg.hevc:fps=60" -add "$OUT/audio.m4a" -new "$OUT/kazi_hlg.mp4"
