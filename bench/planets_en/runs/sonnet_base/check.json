@@ -1,0 +1,100 @@
+{
+ "video": "videos/sonnet_base.mp4",
+ "fps": 60.0,
+ "frames": 2357,
+ "duration": 39.29,
+ "size": "1920x1080",
+ "audio_streams": 1,
+ "keywords": 9,
+ "hits": 2,
+ "kazi_rate": 0.222,
+ "chance": 0.205,
+ "lift": 0.017,
+ "window": [
+  -0.35,
+  0.15
+ ],
+ "detail": [
+  {
+   "word": "eight planets",
+   "t": 3.04,
+   "line": 1,
+   "hit": false,
+   "near": 0.0,
+   "before": 0.0
+  },
+  {
+   "word": "Mercury",
+   "t": 8.09,
+   "line": 2,
+   "hit": true,
+   "near": 0.58,
+   "before": 0.23
+  },
+  {
+   "word": "Venus",
+   "t": 11.44,
+   "line": 3,
+   "hit": false,
+   "near": 1.01,
+   "before": 2.26
+  },
+  {
+   "word": "Earth",
+   "t": 17.76,
+   "line": 4,
+   "hit": false,
+   "near": 0.1,
+   "before": 0.99
+  },
+  {
+   "word": "Mars",
+   "t": 20.02,
+   "line": 5,
+   "hit": false,
+   "near": 0.31,
+   "before": 0.55
+  },
+  {
+   "word": "Jupiter",
+   "t": 23.4,
+   "line": 6,
+   "hit": false,
+   "near": 0.11,
+   "before": 0.46
+  },
+  {
+   "word": "Saturn",
+   "t": 27.99,
+   "line": 7,
+   "hit": false,
+   "near": 0.59,
+   "before": 0.6
+  },
+  {
+   "word": "Uranus",
+   "t": 32.86,
+   "line": 8,
+   "hit": false,
+   "near": 0.52,
+   "before": 0.61
+  },
+  {
+   "word": "Neptune",
+   "t": 36.35,
+   "line": 9,
+   "hit": true,
+   "near": 0.71,
+   "before": 0.17
+  }
+ ],
+ "black_frames": 0,
+ "flash_frames": [],
+ "hard_cuts": 0,
+ "longest_static": 4.98,
+ "lufs": -23.8,
+ "true_peak": -3.2,
+ "problems": [
+  "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+ ]
+}

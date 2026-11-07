@@ -1,0 +1,11 @@
+# Narration script: the eight planets. One line per sentence; *word* marks the keyword of the line; the number after | is the pause after the line, in seconds.
+[planets]
+Our solar system has *eight planets*. Let's meet them one by one. | 0.660
+The one closest to the Sun is *Mercury*. It's also the smallest. | 0.610
+Then comes *Venus*. Thick clouds trap its heat, so it's hotter than Mercury. | 0.450
+Third is our own home, *Earth*. | 0.400
+Next comes rusty red *Mars*. | 0.350
+Past the asteroid belt is the biggest, *Jupiter*. It could hold a thousand Earths. | 0.350
+The one with the rings is *Saturn*. | 0.300
+The last two are hard to see by eye. One spins on its side: *Uranus*. | 0.300
+The other has the fiercest winds of all: *Neptune*. | 2.420

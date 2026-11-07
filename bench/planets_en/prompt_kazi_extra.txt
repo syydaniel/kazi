@@ -1,0 +1,3 @@
+
+Installed skill:
+- kazi: Kazi makes explainer videos whose visuals land on the narration's keywords (explainers, science animations, code animations, short knowledge videos). Voice first, then align the script to the time of every word, place each visual by its word, and finally measure the result frame by frame. Location: .claude/skills/kazi/SKILL.md under the working directory

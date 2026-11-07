@@ -1,5 +1,6 @@
 """对时间：把逐句配音按停顿拼成一条，并用 Qwen3-ForcedAligner 给每个字标上起止时间。
 
+中文稿按字对齐，英文稿（没有汉字）按词对齐。
 用法：
   逐句配音：python timeline.py <稿子.txt> <配音目录> <输出 timeline.json> [--wav 拼好的配音.wav] [--lead 1.6]
   一整条现成录音：python timeline.py <稿子.txt> - <输出 timeline.json> --whole 录音.wav
@@ -19,6 +20,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument("script"); ap.add_argument("vodir"); ap.add_argument("out")
 ap.add_argument("--wav", default=""); ap.add_argument("--lead", type=float, default=1.6)
 ap.add_argument("--tail", type=float, default=3.0); ap.add_argument("--cps", type=float, default=5.0)
+ap.add_argument("--wps", type=float, default=2.6, help="英文稿还没配音时，按每秒几个词估时长")
 ap.add_argument("--aligner", default="Qwen/Qwen3-ForcedAligner-0.6B")
 ap.add_argument("--whole", default="", help="一整条现成录音，不用逐句配音")
 ap.add_argument("--speech-gap", action="store_true", help="句后停顿按听到的空白算：减掉这句句尾和下一句句首自带的静音（pace.py 写在每句的 json 里）")
@@ -28,6 +30,8 @@ VO = Path(a.vodir if a.vodir != "-" else Path(a.out).parent/".kazi"); AL = VO/"a
 SR = 24000
 key = lambda s: hashlib.sha1(s.encode("utf-8")).hexdigest()[:12]
 WORD = re.compile(r"[A-Za-z0-9][A-Za-z0-9\.\-']*|[㐀-鿿]")
+HAN = re.compile(r"[㐀-鿿]")
+lang = lambda s: "Chinese" if HAN.search(s) else "English"  # 稿子里没有汉字就按英文对齐（按词）
 
 
 def parse(path):
@@ -62,7 +66,7 @@ def align(wav, say):
     if aligner is None:
         from mlx_audio.stt import load
         aligner = load(a.aligner)
-    r = aligner.generate(str(wav), text=say, language="Chinese")
+    r = aligner.generate(str(wav), text=say, language=lang(say))
     out = [{"t": x["text"], "s": round(float(x["start"]), 3), "e": round(float(x["end"]), 3)} for x in r.segments] if hasattr(r, "segments") else [{"t": x.text, "s": x.start_time, "e": x.end_time} for x in r]
     c.write_text(json.dumps(out, ensure_ascii=False), "utf-8")
     return out
@@ -95,6 +99,24 @@ def unit_times(say, dur, al):
         for q in range(n): times[k+q] = (lo+(hi-lo)*q/n, lo+(hi-lo)*(q+1)/n)
         k = k2
     return [(u, s0, e0, float(times[k][0]), float(times[k][1])) for k, (u, s0, e0) in enumerate(us)]
+
+
+def snap_onsets(ut, y, sr):
+    """对齐器偶尔把一个词的起点放进它前面的停顿里，或者前一个词的尾音里（2026-11-07 英文实测：Earth、Uranus、Neptune
+    早了 0.11 到 0.20 秒）。起点处或起点后 40 毫秒内开始有一段安静（50 毫秒低于门限），就把起点挪到这段安静之后、
+    声音连续响 30 毫秒的地方。只往后挪，最多 0.35 秒，不越过这个词的结尾。"""
+    hop = sr // 100
+    db = 20*np.log10(np.array([np.sqrt(np.mean(y[i:i+hop]**2)) for i in range(0, max(1, len(y)-hop), hop)]) + 1e-9)
+    thr = min(max(db.max() - 34.5, -52.0), -44.0)
+    out = []
+    for u, s0, e0, s, e in ut:
+        k = int(round(s*100)); lim = min(int((e-0.03)*100), int((s+0.35)*100), len(db)-3)
+        j0 = next((j for j in range(k, min(k+5, lim)) if (db[j:j+5] < thr).all()), None)
+        if j0 is not None:
+            j = next((j for j in range(j0, lim) if (db[j:j+3] > thr).all()), None)
+            if j is not None: s = max(s, j/100)
+        out.append((u, s0, e0, s, e))
+    return out
 
 
 def build_cap(it, ut, t):
@@ -137,13 +159,14 @@ if a.whole:
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-ac", "1", "-ar", str(SR), str(tmp)], check=True)
     y, _ = sf.read(tmp, dtype="float32"); total_dur = len(y)/SR
     if total_dur > 300: print("提醒：录音超过 5 分钟，对齐可能不准，建议按段切开")
-    full = "".join(it["say"] for it in items)
+    SEP = "" if lang("".join(it["say"] for it in items)) == "Chinese" else " "  # 英文句子之间要留空格
+    full = SEP.join(it["say"] for it in items)
     al = align(tmp, full)
-    ut_all = unit_times(full, total_dur, al)
+    ut_all = snap_onsets(unit_times(full, total_dur, al), y, SR)
     k0 = 0
     for it in items:
         n_u = len(units(it["say"])); seg = ut_all[k0:k0+n_u]; k0 += n_u
-        base = len("".join(x["say"] for x in items[:items.index(it)]))
+        k_it = items.index(it); base = len(SEP.join(x["say"] for x in items[:k_it])) + (len(SEP) if k_it else 0)
         ut = [(u, s0-base, e0-base, s1, e1) for u, s0, e0, s1, e1 in seg]
         cap = build_cap(it, ut, 0.0)
         words = [{"u": u, "s": round(s1, 3), "e": round(e1, 3)} for u, _, _, s1, e1 in ut]
@@ -174,8 +197,8 @@ for it in items_left:
         assert sr == SR, sr
         dur = len(y)/sr; al = align(w, it["say"]); real_n += 1
     else:
-        y = None; dur = max(0.8, len(units(it["say"]))/a.cps); al = None
-    ut = unit_times(it["say"], dur, al)
+        y = None; dur = max(0.8, len(units(it["say"]))/(a.cps if lang(it["say"]) == "Chinese" else a.wps)); al = None
+    ut = snap_onsets(unit_times(it["say"], dur, al), y, SR)
     cap = build_cap(it, ut, t)
     words = [{"u": u, "s": round(t+s, 3), "e": round(t+e, 3)} for u, _, _, s, e in ut]
     lines.append({"i": it["i"], "sec": it["sec"], "start": round(t, 3), "end": round(t+dur, 3), "pause": it["pause"],

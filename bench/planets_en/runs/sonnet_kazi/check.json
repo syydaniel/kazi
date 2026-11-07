@@ -1,0 +1,100 @@
+{
+ "video": "videos/sonnet_kazi.mp4",
+ "fps": 60.0,
+ "frames": 2357,
+ "duration": 39.29,
+ "size": "1920x1080",
+ "audio_streams": 1,
+ "keywords": 9,
+ "hits": 1,
+ "kazi_rate": 0.111,
+ "chance": 0.219,
+ "lift": -0.108,
+ "window": [
+  -0.35,
+  0.15
+ ],
+ "detail": [
+  {
+   "word": "eight planets",
+   "t": 3.04,
+   "line": 1,
+   "hit": false,
+   "near": 0.49,
+   "before": 0.53
+  },
+  {
+   "word": "Mercury",
+   "t": 8.09,
+   "line": 2,
+   "hit": false,
+   "near": 1.7,
+   "before": 1.16
+  },
+  {
+   "word": "Venus",
+   "t": 11.44,
+   "line": 3,
+   "hit": false,
+   "near": 1.59,
+   "before": 2.08
+  },
+  {
+   "word": "Earth",
+   "t": 17.76,
+   "line": 4,
+   "hit": false,
+   "near": 0.26,
+   "before": 3.28
+  },
+  {
+   "word": "Mars",
+   "t": 20.02,
+   "line": 5,
+   "hit": false,
+   "near": 1.15,
+   "before": 1.76
+  },
+  {
+   "word": "Jupiter",
+   "t": 23.4,
+   "line": 6,
+   "hit": false,
+   "near": 0.24,
+   "before": 2.97
+  },
+  {
+   "word": "Saturn",
+   "t": 27.99,
+   "line": 7,
+   "hit": true,
+   "near": 3.77,
+   "before": 1.67
+  },
+  {
+   "word": "Uranus",
+   "t": 32.86,
+   "line": 8,
+   "hit": false,
+   "near": 2.17,
+   "before": 2.24
+  },
+  {
+   "word": "Neptune",
+   "t": 36.35,
+   "line": 9,
+   "hit": false,
+   "near": 1.55,
+   "before": 2.05
+  }
+ ],
+ "black_frames": 0,
+ "flash_frames": [],
+ "hard_cuts": 0,
+ "longest_static": 2.43,
+ "lufs": -23.8,
+ "true_peak": -3.2,
+ "problems": [
+  "响度 -23.8 LUFS，网络视频一般在 -14 左右"
+ ]
+}

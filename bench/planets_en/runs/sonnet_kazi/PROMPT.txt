@@ -1,0 +1,22 @@
+This is an automated test. Nobody will reply to you along the way, so don't stop to wait for confirmation; keep going until the video is rendered. Time budget: under one hour.
+
+Working directory: ~/kazi-bench/sonnet_kazi
+Run every command inside this directory (cd into it first, or use absolute paths). Don't read or write any file outside it, and don't look at what is in other directories.
+Environment: Python is ~/kazi-bench/.venv/bin/python (numpy, scipy, soundfile, librosa, pillow, mlx-audio and mlx-whisper are installed); Node.js and ffmpeg are installed; you may install packages from the internet.
+
+Task: using the narration in input/, make an explainer animation about "the eight planets of the solar system".
+- input/narration.wav: the finished narration. The video's audio is this file, unchanged.
+- input/script.txt: the narration script, one line per sentence; the word wrapped in *asterisks* is that line's keyword.
+- input/art/: the art for this video. Several versions of this video are being made, and they must look the same, so use only these images, as follows:
+  - background.png fills the frame for the whole video. Don't add other backgrounds, stars, particles or effects.
+  - lineup.png (all eight planets in a row), planets/<name>.png, sun.png, and labels/<name>.png (each planet's name as an image; labels/eight_planets.png says "8 Planets").
+  - First line: lineup.png across the middle of the frame, with the "8 Planets" label above it.
+  - Each line that introduces a planet: that planet alone on screen, large, left of centre (about 600 px tall; Saturn about 1100 px wide), with its name label to its right. During the Mercury line, sun.png also sits at the left edge of the frame, mostly cut off.
+  - No subtitles and no other text or graphics.
+  - How things move, and when, is up to you.
+- Output out/final.mp4: 1920×1080, 60 fps, H.264, with this narration as its audio, the same length as the narration.
+- When you are done, describe your approach in one or two sentences.
+If a relevant skill is installed on this computer, you may use it.
+
+Installed skill:
+- kazi: Kazi makes explainer videos whose visuals land on the narration's keywords (explainers, science animations, code animations, short knowledge videos). Voice first, then align the script to the time of every word, place each visual by its word, and finally measure the result frame by frame. Location: .claude/skills/kazi/SKILL.md under the working directory
