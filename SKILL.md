@@ -58,6 +58,8 @@ description: 卡字：做"画面卡在旁白关键词上"的讲解视频、科�
 **配音**
 - `python tools/voice.py script.txt vo --ref 声音样本.wav`：每句生成 4 遍，语音识别转回文字和原稿比对，念错的扔掉，留最好的一遍。
 - 多音字、听起来像别的意思，识别结果里会露出来；对不上的句子改写或者改念法，别硬留。
+- 英文片要用用户自己说的英文当参考，中文参考念英文像用户本人的程度低一截。让用户照 `tools/ref_read_en.txt` 录一遍，`tools/ref_prep.py` 切出参考段和对照句子，再配：`voice.py ... --lang en --ref ref_en/ref.wav --like ref_en/like --takes 6`。用一段用户没念过的稿子盲听定参考段，见 docs/02 的「英文片」。
+- 嫌英文里中文腔重：`--voiceprint-only`（只借用户的音色，不学参考段的念法）加 `--chunk-words 60 --fit-rate`（整段一口气念，再切回单句、变速到目标语速）。定下来用 `--save-voice` 存成声音包，以后 `--voice 包` 直接用，不再试。
 - 想整体快一点用 `tools/tempo.py`（变速不变调），别重新生成。
 - `python tools/pace.py vo_fast vo_paced`：规整停顿。句首句尾的静音、句内标点处的静音都量出来，补短剪长，只动静音不动声音。
 - `tools/polyphone.py` 挑出可能读错的多音字拼成试听音频；它会误报也会漏，最后靠人听。
@@ -94,6 +96,7 @@ description: 卡字：做"画面卡在旁白关键词上"的讲解视频、科�
 | `tools/doctor.py` | 查环境，缺什么、怎么装 |
 | `tools/lint_script.py` | 查稿子 |
 | `tools/voice.py` | 克隆声音逐句配音，多遍挑一 |
+| `tools/ref_prep.py` | 把用户自己的录音切成克隆参考段（一字不差的逐字稿）和对照句子 |
 | `tools/tempo.py` | 整体变速不变调 |
 | `tools/pace.py` | 规整停顿：句首句尾和句内标点处的静音 |
 | `tools/polyphone.py` | 挑出可能读错的多音字，拼成试听音频 |

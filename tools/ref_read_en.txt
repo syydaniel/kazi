@@ -1,0 +1,22 @@
+# 英文克隆参考的朗读稿（tools/ref_prep.py --script 用）。一句一行，[P#] 开新段。225 个词，约 80 秒，录法见 docs/02_配音.md「英文片」。
+[P1]
+Hi there.
+Have you ever watched an explainer video and thought, something about this feels a little off?
+The pictures look fine, the voice sounds fine, but the two just don't line up.
+That's the problem I've been working on for the last three months.
+[P2]
+Here's the idea.
+First, I write the script and record the voice.
+Then a small tool listens to every word and measures exactly when it starts.
+With those timestamps, the animation knows where to move.
+A chart grows on the word "growth", a box pops up right on the keyword, and nothing has to wait around for the voice to catch up.
+[P3]
+Actually, I never planned any of this.
+I'm a researcher, not a designer, and at first I wasn't sure it would work at all.
+But after a few weeks of trial and error, of breaking things and fixing them again, I realized that good timing matters more than fancy visuals.
+Viewers rarely notice it when it's right, yet they always feel it when it's wrong.
+[P4]
+So, what does it take to make one of these?
+Honestly, not much: a quiet room, a decent microphone, and a bit of patience.
+If you'd like to try it yourself, the whole thing is free and open source.
+Pick it up, play around with it, and let me know what you think.
